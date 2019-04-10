@@ -12,8 +12,8 @@
  * Copyright Information: This code was heavily derived from the Adafruit ble library "controller"
  *                        example sketch. The author started with an exact copy of the example sketch, 
  *                        and modified it to fit the needs of the project. The main portions that are 
- *                        copied are set up and ble connection settings. Custom portions are timer, switch structs, 
- *                        and current sense settings.
+ *                        copied from Adafruit Industries are set up and ble connection settings. 
+ *                        Custom portions are timer, outlet structs, and current sense settings.
 *********************************************************************/
 
 #include <string.h>
@@ -24,6 +24,7 @@
 #include "Adafruit_BluefruitLE_UART.h"
 
 #include "BluefruitConfig.h"
+#include "outlet.h"
 
 #if SOFTWARE_SERIAL_AVAILABLE
   #include <SoftwareSerial.h>
@@ -65,24 +66,10 @@
     #define MODE_LED_BEHAVIOUR          "MODE"
 /*=========================================================================*/
 
-// Create the bluefruit object, either software serial...uncomment these lines
-/*
-SoftwareSerial bluefruitSS = SoftwareSerial(BLUEFRUIT_SWUART_TXD_PIN, BLUEFRUIT_SWUART_RXD_PIN);
 
-Adafruit_BluefruitLE_UART ble(bluefruitSS, BLUEFRUIT_UART_MODE_PIN,
-                      BLUEFRUIT_UART_CTS_PIN, BLUEFRUIT_UART_RTS_PIN);
-*/
-
-/* ...or hardware serial, which does not need the RTS/CTS pins. Uncomment this line */
-//Adafruit_BluefruitLE_UART ble(BLUEFRUIT_HWSERIAL_NAME, BLUEFRUIT_UART_MODE_PIN);
-
-/* ...hardware SPI, using SCK/MOSI/MISO hardware SPI pins and then user selected CS/IRQ/RST */
+/* Insantiate BLE object */
 Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
-
-/* ...software SPI, using SCK/MOSI/MISO user-defined SPI pins and then user selected CS/IRQ/RST */
-//Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_SCK, BLUEFRUIT_SPI_MISO,
-//                             BLUEFRUIT_SPI_MOSI, BLUEFRUIT_SPI_CS,
-//                             BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
+ 
 
 
 // A small helper
@@ -135,7 +122,7 @@ void setup(void)
   }
   //Change the device name so it is easily identifiable in app.
 
-  if (! ble.sendCommandCheckOK(F("AT+GAPDEVNAME=Bluefruit HRM")) ) {
+  if (! ble.sendCommandCheckOK(F("AT+GAPDEVNAME= Reverse Biased Bluetooth Switch")) ) {
     error(F("Could not set device name?"));
   }
   
@@ -182,7 +169,9 @@ void setup(void)
 /**************************************************************************/
 void loop(void)
 {
-  /* Wait for new data to arrive */
+  /* Update all statuses and send status packets to app*/
+
+  /* Check if new data has arrived */
   uint8_t len = readPacket(&ble, BLE_READPACKET_TIMEOUT);
   if (len == 0) return;
 
