@@ -32,13 +32,12 @@ class Outlet
         Outlet(int onOffPin, int currentPin);
         void switchOnOff();
         bool getOnOff();
-        void timerOnOff();
+        void timerCancel();
         bool getTimerOnOff();
-        void setTimer(int minutes, int seconds);
+        void setTimer(int seconds);
         int getTimer();
         float getCurrent();
-        unsigned long getTimerStart();
-        bool timerDone();
+        void timerRun();
 };
 
 #endif /*_OUTLET_H_*/
