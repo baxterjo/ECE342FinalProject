@@ -18,10 +18,12 @@
 */
 /******************************************************************************/
 
-Outlet::Outlet()
+Outlet::Outlet(int onOffPin, int currentPin)
 {
     _onOff = false;
     _timerOnOff = false;
+    _onOffPin = onOffPin;
+    _currentPin = currrentPin;
 
 }
 
@@ -40,4 +42,25 @@ void Outlet::timerOnOff(){
 bool Outlet::getTimerOnOff(){
     return _timerOnOff;
 }
+
+void Outlet::setTimer(int seconds){
+    
+    _timerStart = millis();
+
+    _timerSeconds = seconds;
+
+    _timerOnOff = true;
+}
+
+int Outlet:::getTimer(){
+    unsigned long timeElapsed = millis() - _timerStart;
+    int timeRemaining = _timerSeconds - (timeElapsed%1000) + 1;
+    return timeRemaining;
+}
+
+float getCurrent(){
+    float current = analogread(_currentPin);
+}
+
+
 
