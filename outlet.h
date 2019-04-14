@@ -13,12 +13,14 @@
 #ifndef _OUTLET_H_
 #define _OUTLET_H_
 
+#include <string.h>
 #include <stdint.h>
 #include <Arduino.h>
 
 class Outlet
 {
     protected:
+        char* _name;
         bool _onOff;
         bool _timerOnOff;
         int _timerSeconds;
@@ -29,13 +31,13 @@ class Outlet
 
 
     public:
-        Outlet(int onOffPin, int currentPin);
+        Outlet(char* name, int onOffPin, int currentPin);
         void switchOnOff();
         bool getOnOff();
         void timerCancel();
         bool getTimerOnOff();
         void setTimer(int seconds);
-        int getTimer();
+        int getTimeRemaining();
         float getCurrent();
         void timerRun();
 };

@@ -58,10 +58,13 @@
 
 // BT SWITCH HW SETTINGS
 // ----------------------------------------------------------------------------------------------
-// The folloing macros declare the pins to use for the BT switch relays and current sensors.
+// The folloing macros declare the pins to use for the BT switch relays and current sensors, and 
+// declare active hich/low on the relays depending on the board layout.
 // This should be used with Adafruit feather boards that use the ATMEGA 32u4 chip.
 // ----------------------------------------------------------------------------------------------
 #define CURRENT_SENSE_1                36
 #define CURRENT_SENSE_2                37
 #define RELAY_1                        38
 #define RELAY_2                        39
+#define outletOn                       true
+#define outletOff                      false

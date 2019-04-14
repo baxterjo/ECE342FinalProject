@@ -10,7 +10,11 @@
 */
 /**************************************************************************/
 
+#include <string.h>
+#include <Arduino.h>
+
 #include "outlet.h"
+#include "HW.h"
 
 /******************************************************************************/
 /*!
@@ -19,9 +23,10 @@
 */
 /******************************************************************************/
 
-Outlet::Outlet(int onOffPin, int currentPin)
+Outlet::Outlet(char* name, int onOffPin, int currentPin)
 {
-    _onOff = false;
+    _name = name;
+    _onOff = outletOff;
     _timerOnOff = false;
     _onOffPin = onOffPin;
     _currentPin = currentPin;
@@ -36,11 +41,18 @@ Outlet::Outlet(int onOffPin, int currentPin)
 */
 /******************************************************************************/
 void Outlet::switchOnOff(){
-    if(_onOff == true && _timerOnOff == true){ //Checks to see if the outlet and timer are on.
+    if(_onOff == outletOn && _timerOnOff == true){ //Checks to see if the outlet and timer are on.
         _timerOnOff = false; //If so, turns timer off.
     }
     _onOff = !_onOff; //Switches the outlet on or off.
     digitalWrite(_onOffPin, _onOff); //Write the _onOff value to the _onOffPin
+    Serial.print(String(_name));
+    if(_onOff == outletOn){
+        Serial.println(" is on.");
+    }
+    else{
+        Serial.println(" is off.");
+    }
 }
 /******************************************************************************/
 /*!
@@ -57,6 +69,8 @@ bool Outlet::getOnOff(){
 /******************************************************************************/
 void Outlet::timerCancel(){
     _timerOnOff = false;
+    Serial.print(String(_name));
+    Serial.println("timer canceled.");
 }
 /******************************************************************************/
 /*!
@@ -86,10 +100,23 @@ void Outlet::setTimer(int seconds){
                  truncates the result into an integer, and returns the integer result.
 */
 /******************************************************************************/
-int Outlet::getTimer(){
-    unsigned long timeElapsed = millis() - _timerStart;
-    int timeRemaining = _timerSeconds - (timeElapsed%1000) + 1;
-    return timeRemaining;
+int Outlet::getTimeRemaining(){
+    if(_timerOnOff){
+        unsigned long timeElapsed = millis() - _timerStart;
+        int timeRemaining = _timerSeconds - (timeElapsed/1000) + 1;
+        bool timerDone = timeRemaining <= 0;
+        if(timerDone){
+         _timerOnOff = false;
+        }
+        Serial.print(String(_name));
+        Serial.print("has");
+        Serial.print(timeRemaining, DEC);
+        Serial.println(" seconds remaining.");
+        return timeRemaining;
+    } else {
+        return 0;
+    }
+
 }
 /******************************************************************************/
 /*!
@@ -108,14 +135,7 @@ float Outlet::getCurrent(){
                  the timer off and returns that it is done.
 */
 /******************************************************************************/
-void Outlet::timerRun(){
-    unsigned long timeElapsed = millis() - _timerStart;
-    int timeRemaining = _timerSeconds - (timeElapsed%1000) + 1;
-    bool timerDone = timeRemaining <= 0;
-    if(timerDone){
-        _timerOnOff = false;
-    }
-}
+
 
 
 

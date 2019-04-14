@@ -69,6 +69,9 @@
 
 /* Insantiate BLE object */
 Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
+// Instantiate outlet objects
+Outlet leftOutlet("Left Outlet", RELAY_1, CURRENT_SENSE_1);
+Outlet rightOutlet("Right Outlet", RELAY_2, CURRENT_SENSE_2);
  
 
 
