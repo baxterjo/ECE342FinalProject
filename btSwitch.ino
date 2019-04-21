@@ -69,6 +69,7 @@
 
 /* Insantiate BLE object */
 Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
+
 // Instantiate outlet objects
 Outlet leftOutlet("Left Outlet", RELAY_1, CURRENT_SENSE_1);
 Outlet rightOutlet("Right Outlet", RELAY_2, CURRENT_SENSE_2);
@@ -172,7 +173,44 @@ void setup(void)
 /**************************************************************************/
 void loop(void)
 {
-  /* Update all statuses and send status packets to app*/
+  /* TODO: Update all statuses and send status packets to app*/
+  //Create datapacket
+  uint8_t switchData[20];
+  //Leave 0th slot empty, place s in the first slot.
+  switchData[1] = 'S';
+  /************************
+   * Retrieve left outlet data.
+   ***************************/
+  switchData[2] = leftOutlet.getOnOff();
+  uint16_t leftCurrent = leftOutlet.getCurrent();
+  switchData[3] = highByte(leftCurrent);
+  switchData[4] = lowByte(leftCurrent);
+  //Get time remaining before filling timer on/off slot, 
+  //getTimeRemaining() will update timer on/off if time remaining == 0.
+  uint16_t leftTimer = leftOutlet.getTimeRemaining();
+  switchData[5] = leftOutlet.getTimerOnOff();
+  switchData[6] = highByte(leftTimer);
+  switchData[7] = lowByte(leftTimer);
+
+  /************************
+   * Retrieve right outlet data.
+   ***************************/
+  switchData[11] = rightOutlet.getOnOff();
+  uint16_t rightCurrent = rightOutlet.getCurrent();
+  switchData[12] = highByte(rightCurrent);
+  switchData[13] = lowByte(rightCurrent);
+  //Get time remaining before filling timer on/off slot, 
+  //getTimeRemaining() will update timer on/off if time remaining == 0.
+  uint16_t rightTimer = rightOutlet.getTimeRemaining();
+  switchData[14] = rightOutlet.getTimerOnOff();
+  switchData[15] = highByte(rightTimer);
+  switchData[16] = lowByte(rightTimer);
+
+  for (int i = 0; i < 20; ++i){
+    ble.write(switchData[i]);
+  }
+  ble.write('\r'); //This sends the data, whether the buffer is full or not.
+
 
   /* Check if new data has arrived */
   uint8_t len = readPacket(&ble, BLE_READPACKET_TIMEOUT);

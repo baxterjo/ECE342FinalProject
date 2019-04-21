@@ -17,6 +17,7 @@
 #include <stdint.h>
 #include <Arduino.h>
 
+
 class Outlet
 {
     protected:
@@ -37,8 +38,8 @@ class Outlet
         void timerCancel();
         bool getTimerOnOff();
         void setTimer(int seconds);
-        int getTimeRemaining();
-        float getCurrent();
+        uint16_t getTimeRemaining();
+        uint16_t getCurrent();
         void timerRun();
 };
 
