@@ -104,7 +104,7 @@ void Outlet::setTimer(int seconds){
 uint16_t Outlet::getTimeRemaining(){
     if(_timerOnOff){
         unsigned long timeElapsed = millis() - _timerStart;
-        int timeRemaining = _timerSeconds - (timeElapsed/1000) + 1;
+        uint16_t timeRemaining = _timerSeconds - (timeElapsed/1000) + 1;
         bool timerDone = timeRemaining <= 0;
         if(timerDone){
          _timerOnOff = false;
