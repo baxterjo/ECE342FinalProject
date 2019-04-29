@@ -168,29 +168,30 @@ void setup(void)
 
 /**************************************************************************/
 /*!
-    @brief  Constantly poll for new command or response data
+    Description: Compiles all outlet data and forms into a cohesive data packet with a
+                 checksum. Then checks for received data and processes if received.
 */
 /**************************************************************************/
 void loop(void)
 {
-  /* TODO: Update all statuses and send status packets to app*/
   //Create datapacket
-  uint8_t switchData[20];
-  //Leave 0th slot empty, place s in the first slot.
-  switchData[1] = 'S';
+  uint8_t switchData[19];
+  switchData[0] = '!';
+  //Leave 1st slot empty, place s in the 2nd slot.
+  switchData[2] = 'S';
   /************************
    * Retrieve left outlet data.
    ***************************/
-  switchData[2] = leftOutlet.getOnOff();
+  switchData[3] = leftOutlet.getOnOff();
   uint16_t leftCurrent = leftOutlet.getCurrent();
-  switchData[3] = highByte(leftCurrent);
-  switchData[4] = lowByte(leftCurrent);
+  switchData[4] = highByte(leftCurrent);
+  switchData[5] = lowByte(leftCurrent);
   //Get time remaining before filling timer on/off slot, 
   //getTimeRemaining() will update timer on/off if time remaining == 0.
   uint16_t leftTimer = leftOutlet.getTimeRemaining();
-  switchData[5] = leftOutlet.getTimerOnOff();
-  switchData[6] = highByte(leftTimer);
-  switchData[7] = lowByte(leftTimer);
+  switchData[6] = leftOutlet.getTimerOnOff();
+  switchData[7] = highByte(leftTimer);
+  switchData[8] = lowByte(leftTimer);
 
   /************************
    * Retrieve right outlet data.
@@ -206,11 +207,32 @@ void loop(void)
   switchData[15] = highByte(rightTimer);
   switchData[16] = lowByte(rightTimer);
 
-  for (int i = 0; i < 20; ++i){
+  uint8_t checksum = 0; //Create a checksum variable.
+
+  for (int i = 0; i < 19; ++i){
+    checksum += switchData[i]; //Add data to checksum. Discarding overflow bits.
     ble.write(switchData[i]);
   }
+  checksum = ~checksum; // Take one's compliment of checksum
+  ble.write(checksum); // Send checksum as 20th Byte in packet.
   ble.write('\r'); //This sends the data, whether the buffer is full or not.
 
+  /************************
+   * Check for overcurrent.
+   ***************************/
+  if((leftCurrent + rightCurrent) / 1000 >= 4.85){ //If combined currents are close to 5A, turn off both relays.
+    if(leftOutlet.getOnOff()){
+      leftOutlet.switchOnOff();
+    }
+    if(rightOutlet.getOnOff()){
+      rightOutlet.switchOnOff();
+    }
+    ble.write('!');
+    ble.write('O');
+    checksum = ~('!' + 'O');
+    ble.write(checksum);
+    ble.write('/r');
+  }
 
   /* Check if new data has arrived */
   uint8_t len = readPacket(&ble, BLE_READPACKET_TIMEOUT);
