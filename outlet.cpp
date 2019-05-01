@@ -70,7 +70,7 @@ bool Outlet::getOnOff(){
 void Outlet::timerCancel(){
     _timerOnOff = false;
     Serial.print(String(_name));
-    Serial.println("timer canceled.");
+    Serial.println(" timer canceled.");
 }
 /******************************************************************************/
 /*!
@@ -90,6 +90,9 @@ bool Outlet::getTimerOnOff(){
 void Outlet::setTimer(int seconds){
     _timerStart = millis();
     _timerSeconds = seconds;
+    if(!_onOff){
+        _onOff = true;
+    }
     _timerOnOff = true;
 }
 /******************************************************************************/
@@ -104,17 +107,17 @@ void Outlet::setTimer(int seconds){
 uint16_t Outlet::getTimeRemaining(){
     if(_timerOnOff){
         unsigned long timeElapsed = millis() - _timerStart;
-        uint16_t timeRemaining = _timerSeconds - (timeElapsed/1000) + 1;
+        int timeRemaining = _timerSeconds - (timeElapsed/1000);
         bool timerDone = timeRemaining <= 0;
         if(timerDone){
-         _timerOnOff = false;
+         this->switchOnOff();
          return 0;
         }
-        Serial.print(String(_name));
-        Serial.print(F("has"));
+        Serial.print(String(_name)); //For use with debugging only, comment out for expo.
+        Serial.print(F(" has "));
         Serial.print(timeRemaining, DEC);
         Serial.println(F(" seconds remaining."));
-        return timeRemaining;
+        return (uint16_t)timeRemaining;
     } else {
         return 0;
     }
@@ -151,10 +154,10 @@ uint16_t Outlet::getCurrent(){
                              to volts and subtract this bias. Then on the next line, we convert
                              the processed input voltage to its corresponding current. (136mV / Amp)
     */
-    Serial.print(String(_name)); //For use with debugging only, comment out for live demo.
-    Serial.print(F(" is drawing "));
-    Serial.print(current, DEC);
-    Serial.println(F(" amps."));
+    // Serial.print(String(_name)); //For use with debugging only, comment out for expo.
+    // Serial.print(F(" is drawing "));
+    // Serial.print(current, DEC);
+    // Serial.println(F(" amps."));
     uint16_t current16 = current * 1000;
     return current16;
 }

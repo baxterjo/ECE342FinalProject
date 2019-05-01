@@ -218,21 +218,21 @@ void loop(void)
   ble.write('\r'); //This sends the data, whether the buffer is full or not.
 
   /************************
-   * Check for overcurrent.
+   * Check for overcurrent. This function will be commented out during block checkoff. 
    ***************************/
-  if((leftCurrent + rightCurrent) / 1000 >= 4.85){ //If combined currents are close to 5A, turn off both relays.
-    if(leftOutlet.getOnOff()){
-      leftOutlet.switchOnOff();
-    }
-    if(rightOutlet.getOnOff()){
-      rightOutlet.switchOnOff();
-    }
-    ble.write('!');
-    ble.write('O');
-    checksum = ~('!' + 'O');
-    ble.write(checksum);
-    ble.write('/r');
-  }
+  // if((leftCurrent + rightCurrent) / 1000 >= 4.85){ //If combined currents are close to 5A, turn off both relays.
+  //   if(leftOutlet.getOnOff()){
+  //     leftOutlet.switchOnOff();
+  //   }
+  //   if(rightOutlet.getOnOff()){
+  //     rightOutlet.switchOnOff();
+  //   }
+  //   ble.write('!');
+  //   ble.write('O');
+  //   checksum = ~('!' + 'O');
+  //   ble.write(checksum);
+  //   ble.write('/r');
+  // } 
 
   /* Check if new data has arrived */
   uint8_t len = readPacket(&ble, BLE_READPACKET_TIMEOUT);
@@ -264,6 +264,25 @@ void loop(void)
       Serial.println(" pressed");
     } else {
       Serial.println(" released");
+    }
+
+    if (buttnum == 1 && pressed){
+      leftOutlet.switchOnOff();
+    }
+    if(buttnum == 2 && pressed){
+      rightOutlet.switchOnOff();
+    }
+    if(buttnum == 3 && pressed){
+      leftOutlet.setTimer(10);
+    }
+    if(buttnum == 4 && pressed){
+      rightOutlet.setTimer(10);
+    }
+    if(buttnum == 7 && pressed){
+      leftOutlet.timerCancel();
+    }
+    if(buttnum == 8 && pressed){
+      rightOutlet.timerCancel();
     }
   }
 
