@@ -100,7 +100,7 @@ extern uint8_t packetbuffer[];
 void setup(void)
 {
 
-  while (!Serial);  // required for Flora & Micro
+ // while (!Serial);  // required for Flora & Micro
   delay(500);
 
   Serial.begin(115200);
@@ -163,6 +163,11 @@ void setup(void)
   ble.setMode(BLUEFRUIT_MODE_DATA);
 
   Serial.println(F("******************************"));
+
+  pinMode(RELAY_1, OUTPUT);
+  pinMode(RELAY_2, OUTPUT);
+  pinMode(CURRENT_SENSE_1, INPUT);
+  pinMode(CURRENT_SENSE_2, INPUT);
 
 }
 
