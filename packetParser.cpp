@@ -17,6 +17,8 @@
 #define PACKET_BUTTON_LEN               (5)
 #define PACKET_COLOR_LEN                (6)
 #define PACKET_LOCATION_LEN             (15)
+#define PACKET_ONOFF_LEN                (5)
+#define PACKET_TIMER_LEN                (8)
 
 //    READ_BUFSIZE            Size of the read buffer for incoming packets
 #define READ_BUFSIZE                    (20)

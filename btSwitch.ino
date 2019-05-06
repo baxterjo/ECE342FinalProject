@@ -182,8 +182,8 @@ void loop(void)
   //Create datapacket
   uint8_t switchData[19];
   switchData[0] = '!';
-  //Leave 1st slot empty, place s in the 2nd slot.
-  switchData[2] = 'S';
+  //Place S in first slot. Leave second slot empty for device ID.
+  switchData[1] = 'S';
   /************************
    * Retrieve left outlet data.
    ***************************/
@@ -225,19 +225,19 @@ void loop(void)
   /************************
    * Check for overcurrent. This function will be commented out during block checkoff. 
    ***************************/
-  // if((leftCurrent + rightCurrent) / 1000 >= 4.85){ //If combined currents are close to 5A, turn off both relays.
-  //   if(leftOutlet.getOnOff()){
-  //     leftOutlet.switchOnOff();
-  //   }
-  //   if(rightOutlet.getOnOff()){
-  //     rightOutlet.switchOnOff();
-  //   }
-  //   ble.write('!');
-  //   ble.write('O');
-  //   checksum = ~('!' + 'O');
-  //   ble.write(checksum);
-  //   ble.write('/r');
-  // } 
+  if((leftCurrent + rightCurrent) / 1000 >= 4.95){ //If combined currents are close to 5A, turn off both relays.
+    if(leftOutlet.getOnOff()){
+      leftOutlet.switchOnOff();
+    }
+    if(rightOutlet.getOnOff()){
+      rightOutlet.switchOnOff();
+    }
+    ble.write('!');
+    ble.write('O');
+    checksum = ~('!' + 'O');
+    ble.write(checksum);
+    ble.write('/r');
+  } 
 
   /* Check if new data has arrived */
   uint8_t len = readPacket(&ble, BLE_READPACKET_TIMEOUT);
@@ -245,6 +245,35 @@ void loop(void)
 
   /* Got a packet! */
   // printHex(packetbuffer, len);
+
+  //Outlet Controller
+  if(packetbuffer[1] == 'P'){
+     if(packetbuffer[3] == 'L'){
+       leftOutlet.switchOnOff();
+     } else if(packetbuffer[3] == 'R'){
+       rightOutlet.switchOnOff();
+     }
+  }
+
+  //Timer Controller
+  if(packetbuffer[1] == 'T'){
+    if(packetbuffer[4] == 'S'){
+      int timeset = packetbuffer[5];
+      timeset << 4;
+      timeset += packetbuffer[6];
+      if(packetbuffer[3] == 'L'){
+        leftOutlet.setTimer(timeset);
+      } else if(packetbuffer[3] == 'R'){
+        rightOutlet.setTimer(timeset);
+      }
+    } else if (packetbuffer[4] == 'C'){
+      if(packetbuffer[3] == 'L'){
+        leftOutlet.timerCancel();
+      } else if (packetbuffer[3] == 'R'){
+        rightOutlet.timerCancel();
+      }
+    }
+  }
 
   // Color
   if (packetbuffer[1] == 'C') {
