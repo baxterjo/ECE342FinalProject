@@ -126,7 +126,7 @@ void setup(void)
   }
   //Change the device name so it is easily identifiable in app.
 
-  if (! ble.sendCommandCheckOK(F("AT+GAPDEVNAME= Reverse Biased Bluetooth Switch")) ) {
+  if (! ble.sendCommandCheckOK(F("AT+GAPDEVNAME= RB Bluetooth Switch")) ) {
     error(F("Could not set device name?"));
   }
   
