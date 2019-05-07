@@ -244,7 +244,7 @@ void loop(void)
   if (len == 0) return;
 
   /* Got a packet! */
-  // printHex(packetbuffer, len);
+  printHex(packetbuffer, len);
 
   //Outlet Controller
   if(packetbuffer[1] == 'P'){
@@ -300,24 +300,24 @@ void loop(void)
       Serial.println(" released");
     }
 
-    if (buttnum == 1 && pressed){
-      leftOutlet.switchOnOff();
-    }
-    if(buttnum == 2 && pressed){
-      rightOutlet.switchOnOff();
-    }
-    if(buttnum == 3 && pressed){
-      leftOutlet.setTimer(10);
-    }
-    if(buttnum == 4 && pressed){
-      rightOutlet.setTimer(10);
-    }
-    if(buttnum == 7 && pressed){
-      leftOutlet.timerCancel();
-    }
-    if(buttnum == 8 && pressed){
-      rightOutlet.timerCancel();
-    }
+    // if (buttnum == 1 && pressed){
+    //   leftOutlet.switchOnOff();
+    // }
+    // if(buttnum == 2 && pressed){
+    //   rightOutlet.switchOnOff();
+    // }
+    // if(buttnum == 3 && pressed){
+    //   leftOutlet.setTimer(10);
+    // }
+    // if(buttnum == 4 && pressed){
+    //   rightOutlet.setTimer(10);
+    // }
+    // if(buttnum == 7 && pressed){
+    //   leftOutlet.timerCancel();
+    // }
+    // if(buttnum == 8 && pressed){
+    //   rightOutlet.timerCancel();
+    // }
   }
 
   // GPS Location
@@ -326,12 +326,12 @@ void loop(void)
     lat = parsefloat(packetbuffer+2);
     lon = parsefloat(packetbuffer+6);
     alt = parsefloat(packetbuffer+10);
-    Serial.print("GPS Location\t");
-    Serial.print("Lat: "); Serial.print(lat, 4); // 4 digits of precision!
-    Serial.print('\t');
-    Serial.print("Lon: "); Serial.print(lon, 4); // 4 digits of precision!
-    Serial.print('\t');
-    Serial.print(alt, 4); Serial.println(" meters");
+    // Serial.print("GPS Location\t");
+    // Serial.print("Lat: "); Serial.print(lat, 4); // 4 digits of precision!
+    // Serial.print('\t');
+    // Serial.print("Lon: "); Serial.print(lon, 4); // 4 digits of precision!
+    // Serial.print('\t');
+    // Serial.print(alt, 4); Serial.println(" meters");
   }
 
   // Accelerometer
@@ -340,10 +340,10 @@ void loop(void)
     x = parsefloat(packetbuffer+2);
     y = parsefloat(packetbuffer+6);
     z = parsefloat(packetbuffer+10);
-    Serial.print("Accel\t");
-    Serial.print(x); Serial.print('\t');
-    Serial.print(y); Serial.print('\t');
-    Serial.print(z); Serial.println();
+    // Serial.print("Accel\t");
+    // Serial.print(x); Serial.print('\t');
+    // Serial.print(y); Serial.print('\t');
+    // Serial.print(z); Serial.println();
   }
 
   // Magnetometer
@@ -352,10 +352,10 @@ void loop(void)
     x = parsefloat(packetbuffer+2);
     y = parsefloat(packetbuffer+6);
     z = parsefloat(packetbuffer+10);
-    Serial.print("Mag\t");
-    Serial.print(x); Serial.print('\t');
-    Serial.print(y); Serial.print('\t');
-    Serial.print(z); Serial.println();
+    // Serial.print("Mag\t");
+    // Serial.print(x); Serial.print('\t');
+    // Serial.print(y); Serial.print('\t');
+    // Serial.print(z); Serial.println();
   }
 
   // Gyroscope
@@ -364,10 +364,10 @@ void loop(void)
     x = parsefloat(packetbuffer+2);
     y = parsefloat(packetbuffer+6);
     z = parsefloat(packetbuffer+10);
-    Serial.print("Gyro\t");
-    Serial.print(x); Serial.print('\t');
-    Serial.print(y); Serial.print('\t');
-    Serial.print(z); Serial.println();
+    // Serial.print("Gyro\t");
+    // Serial.print(x); Serial.print('\t');
+    // Serial.print(y); Serial.print('\t');
+    // Serial.print(z); Serial.println();
   }
 
   // Quaternions
@@ -377,10 +377,10 @@ void loop(void)
     y = parsefloat(packetbuffer+6);
     z = parsefloat(packetbuffer+10);
     w = parsefloat(packetbuffer+14);
-    Serial.print("Quat\t");
-    Serial.print(x); Serial.print('\t');
-    Serial.print(y); Serial.print('\t');
-    Serial.print(z); Serial.print('\t');
-    Serial.print(w); Serial.println();
+    // Serial.print("Quat\t");
+    // Serial.print(x); Serial.print('\t');
+    // Serial.print(y); Serial.print('\t');
+    // Serial.print(z); Serial.print('\t');
+    // Serial.print(w); Serial.println();
   }
 }

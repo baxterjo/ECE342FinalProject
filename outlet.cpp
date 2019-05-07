@@ -154,10 +154,10 @@ uint16_t Outlet::getCurrent(){
                              to volts and subtract this bias. Then on the next line, we convert
                              the processed input voltage to its corresponding current. (136mV / Amp)
     */
-    Serial.print(String(_name)); //For use with debugging only, comment out for expo.
-    Serial.print(F(" is drawing "));
-    Serial.print(current, DEC);
-    Serial.println(F(" amps."));
+    // Serial.print(String(_name)); //For use with debugging only, comment out for expo.
+    // Serial.print(F(" is drawing "));
+    // Serial.print(current, DEC);
+    // Serial.println(F(" amps."));
     uint16_t current16 = current * 1000;
     return current16;
 }
