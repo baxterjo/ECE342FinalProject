@@ -168,6 +168,7 @@ void setup(void)
   pinMode(RELAY_2, OUTPUT);
   pinMode(CURRENT_SENSE_1, INPUT);
   pinMode(CURRENT_SENSE_2, INPUT);
+  leftOutlet.switchOnOff();
 
 }
 
