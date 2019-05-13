@@ -184,16 +184,33 @@ void loop(void)
   switchData[0] = '!';
   //Place S in first slot. Leave second slot empty for device ID.
   switchData[1] = 'S';
+ /************************
+   * Retrieve and update all data.
+   ***************************/
+  uint16_t leftCurrent = leftOutlet.getCurrent();
+  uint16_t leftTimer = leftOutlet.getTimeRemaining();
+  uint16_t rightCurrent = rightOutlet.getCurrent();
+  uint16_t rightTimer = rightOutlet.getTimeRemaining();
+
+  /************************
+   * Check for overcurrent. This function will be commented out during block checkoff. 
+   ***************************/
+  if((leftCurrent + rightCurrent) / 1000 >= 4.95){ //If combined currents are close to 5A, turn off both relays.
+    if(leftOutlet.getOnOff()){
+      leftOutlet.switchOnOff();
+    }
+    if(rightOutlet.getOnOff()){
+      rightOutlet.switchOnOff();
+    }
+    switchData[18] = true;
+  } 
+
   /************************
    * Retrieve left outlet data.
    ***************************/
   switchData[3] = leftOutlet.getOnOff();
-  uint16_t leftCurrent = leftOutlet.getCurrent();
   switchData[4] = highByte(leftCurrent);
   switchData[5] = lowByte(leftCurrent);
-  //Get time remaining before filling timer on/off slot, 
-  //getTimeRemaining() will update timer on/off if time remaining == 0.
-  uint16_t leftTimer = leftOutlet.getTimeRemaining();
   switchData[6] = leftOutlet.getTimerOnOff();
   switchData[7] = highByte(leftTimer);
   switchData[8] = lowByte(leftTimer);
@@ -202,12 +219,8 @@ void loop(void)
    * Retrieve right outlet data.
    ***************************/
   switchData[11] = rightOutlet.getOnOff();
-  uint16_t rightCurrent = rightOutlet.getCurrent();
   switchData[12] = highByte(rightCurrent);
   switchData[13] = lowByte(rightCurrent);
-  //Get time remaining before filling timer on/off slot, 
-  //getTimeRemaining() will update timer on/off if time remaining == 0.
-  uint16_t rightTimer = rightOutlet.getTimeRemaining();
   switchData[14] = rightOutlet.getTimerOnOff();
   switchData[15] = highByte(rightTimer);
   switchData[16] = lowByte(rightTimer);
@@ -222,22 +235,7 @@ void loop(void)
   ble.write(checksum); // Send checksum as 20th Byte in packet.
   ble.write('\r'); //This sends the data, whether the buffer is full or not.
 
-  /************************
-   * Check for overcurrent. This function will be commented out during block checkoff. 
-   ***************************/
-  if((leftCurrent + rightCurrent) / 1000 >= 4.95){ //If combined currents are close to 5A, turn off both relays.
-    if(leftOutlet.getOnOff()){
-      leftOutlet.switchOnOff();
-    }
-    if(rightOutlet.getOnOff()){
-      rightOutlet.switchOnOff();
-    }
-    ble.write('!');
-    ble.write('O');
-    checksum = ~('!' + 'O');
-    ble.write(checksum);
-    ble.write('/r');
-  } 
+  
 
   /* Check if new data has arrived */
   uint8_t len = readPacket(&ble, BLE_READPACKET_TIMEOUT);
