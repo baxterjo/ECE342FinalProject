@@ -194,17 +194,17 @@ void loop(void)
   uint16_t rightTimer = rightOutlet.getTimeRemaining();
 
   /************************
-   * Check for overcurrent. This function will be commented out during block checkoff. 
+   * Check for overcurrent. This function will be commented out until board is built. 
    ***************************/
-  if((leftCurrent + rightCurrent) / 1000 >= 4.95){ //If combined currents are close to 5A, turn off both relays.
-    if(leftOutlet.getOnOff()){
-      leftOutlet.switchOnOff();
-    }
-    if(rightOutlet.getOnOff()){
-      rightOutlet.switchOnOff();
-    }
-    switchData[18] = true;
-  } 
+  // if((leftCurrent + rightCurrent) / 1000 >= 4.95){ //If combined currents are close to 5A, turn off both relays.
+  //   if(leftOutlet.getOnOff()){
+  //     leftOutlet.switchOnOff();
+  //   }
+  //   if(rightOutlet.getOnOff()){
+  //     rightOutlet.switchOnOff();
+  //   }
+  //   switchData[18] = true;
+  // } 
 
   /************************
    * Retrieve left outlet data.
