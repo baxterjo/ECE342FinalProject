@@ -178,24 +178,21 @@ void setup(void)
                  checksum. Then checks for received data and processes if received.
 */
 /**************************************************************************/
+unsigned long lastSent = millis();
+bool overCurrent = false;
 void loop(void)
 {
-  //Create datapacket
-  uint8_t switchData[19];
-  switchData[0] = '!';
-  //Place S in first slot. Leave second slot empty for device ID.
-  switchData[1] = 'S';
  /************************
-   * Retrieve and update all data.
-   ***************************/
+  * Retrieve and update all data.
+ ***************************/
   uint16_t leftCurrent = leftOutlet.getCurrent();
   uint16_t leftTimer = leftOutlet.getTimeRemaining();
   uint16_t rightCurrent = rightOutlet.getCurrent();
   uint16_t rightTimer = rightOutlet.getTimeRemaining();
 
-  /************************
-   * Check for overcurrent. This function will be commented out until board is built. 
-   ***************************/
+ /************************
+  * Check for overcurrent. This function will be commented out until board is built. 
+  ***************************/
   // if((leftCurrent + rightCurrent) / 1000 >= 4.95){ //If combined currents are close to 5A, turn off both relays.
   //   if(leftOutlet.getOnOff()){
   //     leftOutlet.switchOnOff();
@@ -203,8 +200,16 @@ void loop(void)
   //   if(rightOutlet.getOnOff()){
   //     rightOutlet.switchOnOff();
   //   }
-  //   switchData[18] = true;
-  // } 
+  //   overCurrent = true;
+  // }
+
+if(millis() - lastSent >= 500){
+
+  //Create datapacket
+  uint8_t switchData[19];
+  switchData[0] = '!';
+  //Place S in first slot. Leave second slot empty for device ID.
+  switchData[1] = 'S';
 
   /************************
    * Retrieve left outlet data.
@@ -226,6 +231,11 @@ void loop(void)
   switchData[15] = highByte(rightTimer);
   switchData[16] = lowByte(rightTimer);
 
+  if(overCurrent){
+    switchData[18] = overCurrent;
+    overCurrent = false;
+  }
+
   uint8_t checksum = 0; //Create a checksum variable.
 
   for (int i = 0; i < 19; ++i){
@@ -235,7 +245,7 @@ void loop(void)
   checksum = ~checksum; // Take one's compliment of checksum
   ble.write(checksum); // Send checksum as 20th Byte in packet.
   ble.write('\r'); //This sends the data, whether the buffer is full or not.
-
+}
   
 
   /* Check if new data has arrived */
