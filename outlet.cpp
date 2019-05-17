@@ -137,16 +137,16 @@ uint16_t Outlet::getTimeRemaining(){
 */
 /******************************************************************************/
 uint16_t Outlet::getCurrent(){
-    int maxCurrent = 0;
+    int currentSample = 0;
     unsigned long startTime = millis();
-    while(millis() - startTime < 250)
+    while((millis() - startTime < 50) && currentSample <= 600)
     {
        int sample = analogRead(_currentPin); 
-       if(sample > maxCurrent){
-           maxCurrent = sample;
+       if(sample > currentSample){
+           currentSample = sample;
        } 
     }
-    float voltsIn = (maxCurrent*3.3/1024) - 1.67;
+    float voltsIn = (currentSample * 3.3/1024) - 1.67;
     float current = voltsIn / .136;
     /*Algorithm explanation: The input reading is biased by half of the reference voltage 
                              at the IC, meaning a 0 AMP current will output 3.3v / 2. 
@@ -158,7 +158,8 @@ uint16_t Outlet::getCurrent(){
     // Serial.print(F(" is drawing "));
     // Serial.print(current, DEC);
     // Serial.println(F(" amps."));
-    uint16_t current16 = current * 1000;
+    _avgCurrent = .875 * _avgCurrent + .125 * current;
+    uint16_t current16 = _avgCurrent * 1000;
     return current16;
 }
 /******************************************************************************/

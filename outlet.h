@@ -25,7 +25,7 @@ class Outlet
         bool _onOff;
         bool _timerOnOff;
         int _timerSeconds;
-        float _current;
+        float _avgCurrent;
         unsigned long _timerStart;
         int _onOffPin;
         int _currentPin;
