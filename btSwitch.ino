@@ -204,7 +204,7 @@ void loop(void)
   // }
 
 if(millis() - lastSent >= 500){
-
+  lastSent = millis();
   //Create datapacket
   uint8_t switchData[19];
   switchData[0] = '!';
