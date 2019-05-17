@@ -62,9 +62,9 @@
 // declare active hich/low on the relays depending on the board layout.
 // This should be used with Adafruit feather boards that use the ATMEGA 32u4 chip.
 // ----------------------------------------------------------------------------------------------
-#define CURRENT_SENSE_1                A0 //(Feather A0)
-#define CURRENT_SENSE_2                A1 //(Feather A1)
-#define RELAY_1                        A2 //(Feather A2)
-#define RELAY_2                        A3 //(Feather A3)
+#define CURRENT_SENSE_1                A2 //(Feather A0)
+#define CURRENT_SENSE_2                A3 //(Feather A1)
+#define RELAY_1                        A0 //(Feather A2)
+#define RELAY_2                        A1 //(Feather A3)
 #define outletOn                       true
 #define outletOff                      false
