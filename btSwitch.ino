@@ -268,7 +268,7 @@ if(millis() - lastSent >= 500){
   if(packetbuffer[1] == 'T'){
     if(packetbuffer[4] == 'S'){
       int timeset = packetbuffer[5];
-      timeset << 4;
+      timeset << 8;
       timeset += packetbuffer[6];
       if(packetbuffer[3] == 'L'){
         leftOutlet.setTimer(timeset);
