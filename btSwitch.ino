@@ -269,7 +269,7 @@ if(millis() - lastSent >= 500){
     if(packetbuffer[4] == 'S'){
       int timeset = packetbuffer[5];
       timeset << 8;
-      timeset += packetbuffer[6];
+      timeset ^ packetbuffer[6];
       if(packetbuffer[3] == 'L'){
         leftOutlet.setTimer(timeset);
       } else if(packetbuffer[3] == 'R'){
