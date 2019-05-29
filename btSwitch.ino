@@ -168,7 +168,6 @@ void setup(void)
   pinMode(RELAY_2, OUTPUT);
   pinMode(CURRENT_SENSE_1, INPUT);
   pinMode(CURRENT_SENSE_2, INPUT);
-  leftOutlet.switchOnOff();
 
 }
 
@@ -267,9 +266,9 @@ if(millis() - lastSent >= 500){
   //Timer Controller
   if(packetbuffer[1] == 'T'){
     if(packetbuffer[4] == 'S'){
-      int timeset = packetbuffer[5];
-      timeset << 8;
-      timeset ^ packetbuffer[6];
+      uint8_t hByte = packetbuffer[5];
+      uint8_t lByte = packetbuffer[6];
+      uint16_t timeset = (hByte << 8) ^ (lByte & 0xFF);
       if(packetbuffer[3] == 'L'){
         leftOutlet.setTimer(timeset);
       } else if(packetbuffer[3] == 'R'){

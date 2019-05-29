@@ -37,7 +37,7 @@ class Outlet
         bool getOnOff();
         void timerCancel();
         bool getTimerOnOff();
-        void setTimer(int seconds);
+        void setTimer(uint16_t seconds);
         uint16_t getTimeRemaining();
         uint16_t getCurrent();
         void timerRun();

@@ -87,7 +87,7 @@ bool Outlet::getTimerOnOff(){
                  of the timer. Then turns the timer on.
 */
 /******************************************************************************/
-void Outlet::setTimer(int seconds){
+void Outlet::setTimer(uint16_t seconds){
     _timerStart = millis();
     _timerSeconds = seconds;
     if(!_onOff){
