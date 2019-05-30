@@ -192,7 +192,7 @@ void loop(void)
  /************************
   * Check for overcurrent. This function will be commented out until board is built. 
   ***************************/
-  // if((leftCurrent + rightCurrent) / 1000 >= 4.95){ //If combined currents are close to 5A, turn off both relays.
+  // if((float)(leftCurrent + rightCurrent) / 1000 >= 4.95){ //If combined currents are close to 5A, turn off both relays.
   //   if(leftOutlet.getOnOff()){
   //     leftOutlet.switchOnOff();
   //   }
@@ -203,12 +203,12 @@ void loop(void)
   // }
 
 if(millis() - lastSent >= 500){
-  // Serial.print(String("Left Outlet is drawing")); //For use with debugging only, comment out for expo.
-    // Serial.print((leftCurrent/1000), DEC);
-    // Serial.println(F(" amps."));
-    // Serial.print(String("Right Outlet is drawing")); //For use with debugging only, comment out for expo.
-    // Serial.print((rightCurrent/1000), DEC);
-    // Serial.println(F(" amps."));
+  Serial.print(String("Left Outlet is drawing")); //For use with debugging only, comment out for expo.
+    Serial.print((float)(leftCurrent/1000), DEC);
+    Serial.println(F(" amps."));
+    Serial.print(String("Right Outlet is drawing")); //For use with debugging only, comment out for expo.
+    Serial.print((float)(rightCurrent/1000), DEC);
+    Serial.println(F(" amps."));
   lastSent = millis();
   //Create datapacket
   uint8_t switchData[19];
