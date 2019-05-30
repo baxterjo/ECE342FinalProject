@@ -146,13 +146,13 @@ uint16_t Outlet::getCurrent(){
            currentSample = sample;
        } 
     }
-    float voltsIn = (currentSample * 3.3/1024) - 1.67;
-    float current = voltsIn / .136;
+    float voltsIn = (currentSample * 3.3/1024) - 1.65;
+    float current = voltsIn / .132;
     /*Algorithm explanation: The input reading is biased by half of the reference voltage 
-                             at the IC, meaning a 0 AMP current will output 3.3v / 2. 
+                             at the IC, meaning a 0 AMP current will output 3.3v / 2.  
                              So after reading the pin, we must convert the bit reading
                              to volts and subtract this bias. Then on the next line, we convert
-                             the processed input voltage to its corresponding current. (136mV / Amp)
+                             the processed input voltage to its corresponding current. (132mV / Amp)
     */
     // Serial.print(String(_name)); //For use with debugging only, comment out for expo.
     // Serial.print(F(" is drawing "));

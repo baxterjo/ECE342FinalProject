@@ -203,6 +203,12 @@ void loop(void)
   // }
 
 if(millis() - lastSent >= 500){
+  // Serial.print(String("Left Outlet is drawing")); //For use with debugging only, comment out for expo.
+    // Serial.print((leftCurrent/1000), DEC);
+    // Serial.println(F(" amps."));
+    // Serial.print(String("Right Outlet is drawing")); //For use with debugging only, comment out for expo.
+    // Serial.print((rightCurrent/1000), DEC);
+    // Serial.println(F(" amps."));
   lastSent = millis();
   //Create datapacket
   uint8_t switchData[19];
